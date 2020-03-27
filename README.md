@@ -1,25 +1,16 @@
 # Enodo Fullstack Engineering Challenge
 
-Welcome to our Fullstack Engineering Challenge repository. This README will guide you on how to participate in this challenge.
+# Set up backend application
+  - How to create the database
+  - cd into back_end_app/db
+  - sqlite3 enodo.db
+  - .quit
+  - cat enodo.sql | sqlite3 enodotest.db
+# Seed database - from root directory
+  - python xlx_parser.py
+# Run the API
+  - flask run -p 5000
 
-Please fork this repo before you start working on the challenge. We will evaluate the code on the fork.
-
-
-## Challenge
-
-
-Front-end and backend to allow users to search, select, or unselect properties from the DB.
-
-## Requirements
-- Build frontend with Element.js and Vue.js
-- Create DB from data in excel file (suggestion: Sqlite)
-- Create API to interact with database (suggestion: falcon, flask, express...)
-- Input field with [autocomplete](https://element.eleme.io/#/en-US/component/input#autocomplete), displaying the properties from the DB through the API.
-  - On Selection of search result, save as "Selected" to DB.
-- Table Showing selected properties:
-  - Column 1: Full Address
-  - Column 2: Class Description
-  - Column 3: Delete button
-- Include a delete button to unselect property from DB.
-- Add a test to your implementation.
-- Include a Readme on how to run your solution.
+# Set up front-end application
+  - cd into front_end_app
+  - yarn serve
