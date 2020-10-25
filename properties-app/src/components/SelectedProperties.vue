@@ -1,33 +1,37 @@
 <template>
 <div>
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Class Description</th>
-      <th scope="col">Full Address</th>
-      <th scope="col">Delete</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr v-for="prop in selectedProperties" v-bind:key="prop.index">
-      <td>{{prop.index}}</td>
-      <td>{{prop.classDescription}}</td>
-      <td>{{prop.fullAddress}}</td>
-      <td><button v-on:click="deleteSelected(prop.index)" type="button">Delete</button></td>
-    </tr>
-  </tbody>
-</table>
+<el-table
+  :data="selectedProperties"
+  stripe
+  style="width: 100%"
+>
+  <el-table-column
+    prop="index"
+    label="Index">
+  </el-table-column>
+  <el-table-column
+    prop="classDescription"
+    label="Class Description">
+  </el-table-column>
+  <el-table-column
+    prop="fullAddress"
+    label="Full Address">
+  </el-table-column>
+  <td><button v-on:click="deleteSelected(prop.index)" type="button">Delete</button></td>
+</el-table>
 </div>
 </template>
 
 <script>
-
+import Vue from 'vue';
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+Vue.use(ElementUI);
 export default {
-  data () {return {index: '', classDescription: '', fullAddress: '', selectedProperties: []}},
+  data () {return {selectedProperties: []}},
   methods: {
     getSelectedProperties() {
-        fetch("http://localhost:5000/data/selected_properties")
+        fetch("http://localhost:5000/api/selected_properties")
         .then(resp => {
                    if(resp.ok) {
                       return resp.json()
@@ -44,7 +48,7 @@ export default {
         });
     },
     deleteSelected(item){
-        fetch("http://localhost:5000/data/unset_selected/" + item, {mode:'no-cors'})
+        fetch("http://localhost:5000/api/unset_selected/" + item, {mode:'no-cors'})
         .then(resp => {if(resp.ok) { return resp }})
         .then(() => {
                    this.selectedProperties = []

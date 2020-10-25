@@ -9,7 +9,7 @@ from flask import (
 from .db import get_cursor, TABLENAME
 
 
-bp = Blueprint('data', __name__, url_prefix='/data')
+bp = Blueprint('api', __name__, url_prefix='/api')
 
 
 @bp.route('/get_autocomplete_values/<string:q>')
