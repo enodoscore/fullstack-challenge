@@ -10,17 +10,17 @@ import warnings
 warnings.simplefilter(action='ignore', category=UserWarning)
 import pandas
 
+from utils import get_real_path, DB_FILEPATH, TABLENAME
 
 
-DEFAULT_DB_FILEPATH=os.path.abspath('../../db_data/property.db')
-DEFAULT_EXCEL_FILEPATH=os.path.abspath('../../Enodo_Skills_Assessment_Data_File.xlsx')
-TABLENAME='property'
+EXCEL_FILEPATH='Enodo_Skills_Assessment_Data_File.xlsx'
 
 
 def create_db():
     """Create db for property data and return connection to it."""
-    logging.warning(f'Creating database at "{DEFAULT_DB_FILEPATH}" for property data.')
-    return sqlite3.connect(DEFAULT_DB_FILEPATH)
+    real_path = get_real_path(DB_FILEPATH)
+    logging.warning(f'Creating database at "{real_path}" for property data.')
+    return sqlite3.connect(real_path)
 
 
 def add_selected_column(db_conn):
@@ -32,10 +32,11 @@ def add_selected_column(db_conn):
 
 
 def drop_db():
+    db_file = get_real_path(DB_FILEPATH)
     try:
-        os.remove(DEFAULT_DB_FILEPATH)
+        os.remove(db_file)
     except Exception:
-        logging.error(f'Could not remove file "{DEFAULT_DB_FILEPATH}"!')
+        logging.error(f'Could not remove file "{db_file}"!')
         raise
 
 
@@ -53,11 +54,11 @@ def get_create_table_sql(header_cols):
 
 
 def get_source_data():
-    return pandas.read_excel(DEFAULT_EXCEL_FILEPATH)
+    return pandas.read_excel(get_real_path(EXCEL_FILEPATH))
 
 
 def have_db():
-    return os.path.isfile(DEFAULT_DB_FILEPATH)
+    return os.path.isfile(get_real_path(DB_FILEPATH))
 
 
 def load_data_to_table(data, db_conn):
@@ -84,4 +85,6 @@ def prepare_db(force=False):
 
 if __name__ == '__main__':
     args = extract_cli_args()
+    if not os.environ.get('APP_ROOT'):
+        raise Exception('APP_ROOT environment variable must contain the root of the project.')
     prepare_db(args.force)
