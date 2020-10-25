@@ -1,12 +1,14 @@
 import os
 
 from flask import Flask
+from flask_cors import CORS
 from .db import check_db, get_db_path
 
 
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__)
+    CORS(app)
     app.config.from_mapping(
         SECRET_KEY='dev',
         DATABASE=get_db_path(),

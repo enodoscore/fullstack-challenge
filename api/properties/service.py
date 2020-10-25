@@ -5,6 +5,7 @@ from flask import (
     request,
     session,
 )
+
 from .db import get_cursor, TABLENAME
 
 
@@ -51,6 +52,6 @@ def selected_properties():
     """Return only the selected properties."""
     cur = get_cursor(g)
     cur.execute(
-        f'SELECT class_description, "Full Address", selected FROM {TABLENAME} WHERE selected = 1'
+        f'SELECT "index", class_description, "Full Address" FROM {TABLENAME} WHERE selected = 1'
     )
     return jsonify(properties=cur.fetchall())
