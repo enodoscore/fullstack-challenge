@@ -5,6 +5,7 @@
   stripe
   style="width: 100%"
 >
+<div slot="empty"></div>
   <el-table-column
     prop="index"
     label="Index"
