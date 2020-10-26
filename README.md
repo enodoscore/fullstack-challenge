@@ -28,3 +28,4 @@ Assumes git, npm, python 3.6+ installed.
 2. cd to project dir
 3. pip install -r api/requirements.txt
 4. ./start_app.sh
+5. In browser, navigate to localhost:8080 and check it out.
