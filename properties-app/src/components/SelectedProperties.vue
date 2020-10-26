@@ -7,17 +7,26 @@
 >
   <el-table-column
     prop="index"
-    label="Index">
+    label="Index"
+    width="100"
+  >
   </el-table-column>
   <el-table-column
     prop="classDescription"
-    label="Class Description">
+    label="Class Description"
+    >
   </el-table-column>
   <el-table-column
     prop="fullAddress"
     label="Full Address">
   </el-table-column>
-  <td><button v-on:click="deleteSelected(prop.index)" type="button">Delete</button></td>
+  <el-table-column width="100">
+    label="Delete"
+    <template slot-scope="scope">
+      <el-button size="mini"
+                 @click="deleteSelected(scope.row.index)">Delete</el-button>
+    </template>
+  </el-table-column>
 </el-table>
 </div>
 </template>

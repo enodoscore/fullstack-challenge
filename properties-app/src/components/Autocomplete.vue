@@ -1,10 +1,10 @@
 <template>
 <div style="display: block;">
 <h2>Find and select multi-family properties</h2>
-<div class="autocomplete el-col-12" style="margin: 50px">
+<div class="autocomplete" style="width: 60%; margin-left: auto; margin-right:auto; margin-top: 50px; margin-bottom: 70px; text-align: center;">
 <el-row>
   <el-col>
-    <el-autocomplete class="el-col-24"
+    <el-autocomplete ref=ac class="el-col-24"
       v-model="searchQuery"
       :fetch-suggestions="querySearch"
       placeholder="Search for class or addreess."
@@ -45,7 +45,7 @@ export default {
     prepRows(properties){
       let prepped = []
       properties.forEach(p => {
-        prepped.push({'value': p[1] + '|' + p[2] + '|' + p[0]});
+        prepped.push({'value': p[0] + '| ' + p[1] + ', ' + p[2]});
       })
       return prepped
     },
@@ -54,10 +54,13 @@ export default {
       fetch("http://localhost:5000/api/set_selected/" + idx)
         .then(() => {
           this.emitMethod();
-        });
+        })
+        .then(() => {
+          this.$refs.ac.value = null
+        })
     },
     getIndexFromItem(item){
-      return item.split('|')[2];
+      return item.split('|')[0];
     },
     emitMethod(){
       //refresh the selected properties table on selected
