@@ -19,8 +19,15 @@ EXCEL_FILEPATH='Enodo_Skills_Assessment_Data_File.xlsx'
 def create_db():
     """Create db for property data and return connection to it."""
     real_path = get_real_path(DB_FILEPATH)
+    make_dir(real_path)
     logging.warning(f'Creating database at "{real_path}" for property data.')
     return sqlite3.connect(real_path)
+
+
+def make_dir(real_path):
+    dir = os.path.split(real_path)[0]
+    if not os.path.exists(dir):
+        os.mkdir(dir)
 
 
 def add_selected_column(db_conn):
@@ -35,9 +42,8 @@ def drop_db():
     db_file = get_real_path(DB_FILEPATH)
     try:
         os.remove(db_file)
-    except Exception:
-        logging.error(f'Could not remove file "{db_file}"!')
-        raise
+    except:
+        pass
 
 
 def extract_cli_args():

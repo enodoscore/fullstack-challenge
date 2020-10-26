@@ -5,7 +5,7 @@ from flask import (
     request,
     session,
 )
-
+from flask_cors import cross_origin
 from .db import get_cursor, TABLENAME
 
 
@@ -13,6 +13,7 @@ bp = Blueprint('api', __name__, url_prefix='/api')
 
 
 @bp.route('/get_autocomplete_values/<string:q>')
+@cross_origin()
 def get_autocomplete_values(q):
     cur = get_cursor(g)
     cur.execute(
@@ -48,6 +49,7 @@ def unset_selected(prop_index):
 
 
 @bp.route('/selected_properties')
+@cross_origin()
 def selected_properties():
     """Return only the selected properties."""
     cur = get_cursor(g)
