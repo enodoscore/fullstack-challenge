@@ -1,10 +1,10 @@
 <template>
-<div>
+<div style="display: block;">
 <h2>Find and select multi-family properties</h2>
-<div style="margin: 50px">
-<el-row class="autocomplete">
-  <el-col style="width: 100%">
-    <el-autocomplete
+<div class="autocomplete el-col-12" style="margin: 50px">
+<el-row>
+  <el-col>
+    <el-autocomplete class="el-col-24"
       v-model="searchQuery"
       :fetch-suggestions="querySearch"
       placeholder="Search for class or addreess."
@@ -18,35 +18,50 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
-Vue.use(ElementUI);
+import eventBus from '../event-bus.js'
+
 export default {
-  data() {return {searchQuery: '', rows:{}}},
+  data() {
+    return {
+      searchQuery: '',
+      rows:{}
+    }
+  },
   methods: {
     querySearch(queryString, cb) {
-       fetch("http://localhost:5000/api/get_autocomplete_values/" + queryString)
-       .then(resp => {
-                   if(resp.ok) {
-                      return resp.json()
-                   } else {
-                      alert("Failed to get selected properties. Error: " + resp.status + " - " + resp.statusText) }})
-       .then(resp => {
-          //this.rows.value = resp.properties;
+      fetch("http://localhost:5000/api/get_autocomplete_values/" + queryString)
+        .then(resp => {
+          if(resp.ok) {
+            return resp.json()
+          } else {
+            alert("Failed to get selected properties. Error: " + resp.status + " - " + resp.statusText)
+          }
+        })
+        .then(resp => {
           this.rows = this.prepRows(resp.properties);
           cb(this.rows);
-       });
+        });
     },
     prepRows(properties){
-        let prepped = []
-        properties.forEach(p => {
-           prepped.push({'value': p[1] + " " + p[2]});
-        })
-        return prepped
+      let prepped = []
+      properties.forEach(p => {
+        prepped.push({'value': p[1] + '|' + p[2] + '|' + p[0]});
+      })
+      return prepped
     },
     handleSelect(item){
-        fetch("http://localhost:5000/api/set_selected/" + item);
+      const idx = this.getIndexFromItem(item.value);
+      fetch("http://localhost:5000/api/set_selected/" + idx)
+        .then(() => {
+          this.emitMethod();
+        });
+    },
+    getIndexFromItem(item){
+      return item.split('|')[2];
+    },
+    emitMethod(){
+      //refresh the selected properties table on selected
+      eventBus.$emit('fireSelectedProperties');
     }
   }
 }

@@ -23,14 +23,13 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
-Vue.use(ElementUI);
+import eventBus from '../event-bus.js'
+
 export default {
   data () {return {selectedProperties: []}},
   methods: {
     getSelectedProperties() {
+      this.selectedProperties = [];
         fetch("http://localhost:5000/api/selected_properties")
         .then(resp => {
                    if(resp.ok) {
@@ -61,7 +60,10 @@ export default {
   },
   mounted() {
     this.getSelectedProperties()
-  }
+    eventBus.$on('fireSelectedProperties', () => {
+      this.getSelectedProperties()
+    });
+  },
 }
 </script>
 

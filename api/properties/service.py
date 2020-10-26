@@ -16,7 +16,7 @@ bp = Blueprint('api', __name__, url_prefix='/api')
 def get_autocomplete_values(q):
     cur = get_cursor(g)
     cur.execute(
-        f'SELECT class_description, "Full Address" '
+        f'SELECT "index", trim(class_description), trim("Full Address") '
         f'FROM {TABLENAME} '
         f'WHERE (selected = 0 or selected is null) '
         f'AND (lower(class_description) like ? or lower("Full Address") like ?)',
@@ -52,6 +52,6 @@ def selected_properties():
     """Return only the selected properties."""
     cur = get_cursor(g)
     cur.execute(
-        f'SELECT "index", class_description, "Full Address" FROM {TABLENAME} WHERE selected = 1'
+        f'SELECT "index", trim(class_description), trim("Full Address") FROM {TABLENAME} WHERE selected = 1'
     )
     return jsonify(properties=cur.fetchall())
